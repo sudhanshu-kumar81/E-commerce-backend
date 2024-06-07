@@ -29,6 +29,8 @@ export const fetchAllProducts = async (req, res) => {
   console.log("req.query is ",req.query);
   let query = Product.find({});
   let totalProductsQuery = Product.find({});
+  // let query = Product.find({deleted:{$ne:true}});
+  // let totalProductsQuery = Product.find({deleted:{$ne:true}});
 
   if (req.query.category) {
     query = query.find({ category: req.query.category });

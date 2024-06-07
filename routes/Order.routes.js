@@ -1,11 +1,11 @@
 import express from 'express'
 
-import { createOrder, fetchOrdersByUser, deleteOrder, updateOrder } from '../controller/Order.controller.js';
+import { createOrder, fetchAllOrders, deleteOrder, updateOrder } from '../controller/Order.controller.js';
 
 const router = express.Router();
 //  /orders is already added in base path
 router.post('/', createOrder)
-      .get('/', fetchOrdersByUser)
+      .get('/', fetchAllOrders)
       .delete('/:id', deleteOrder)
       .patch('/:id', updateOrder)
 
