@@ -1,4 +1,27 @@
 import Order from "../model/Order.model.js";
+export const fetchOrderOfUser=async(req,res)=>{
+  console.log("arrived in fetchOrderOfUser ");
+  try{
+    const {id}=req.params;
+    console.log("user id is ",id);
+    const order=await Order.find({user:id});
+    console.log("order is ",order);
+    res.status(200).json({
+      success:true,
+      message:"fetched order of user successfully",
+      userOrder:order,
+    });
+
+  }catch(err){
+    res.status(400).json({
+      success:false,
+      message:"error in fetching user order",
+      error:err.message,
+    });
+  }
+}
+
+
 export const fetchAllOrders = async (req, res) => {
   console.log("req.query is ",req.query);
   let query = Order.find({});
@@ -44,28 +67,6 @@ export const fetchAllOrders = async (req, res) => {
     });
   }
 };
-// export const fetchAllOrders = async (req, res) => {
-//     const user  = req.query;
-//     const userId = user['user.id'];
-//     console.log("user is ",user);
-//     console.log("fetch order by user- req.query",req.query);
-//     try {
-//       const orders = await Order.find({}).populate("user");
-
-//       res.status(200).json({
-//         success:true,
-//         message:"order fetched by user",
-//         orders:orders
-//       });
-//     } catch (err) {
-//       res.status(400).json({
-//         success:false,
-//         message:"error in order fetching by user",
-//        error:err.message
-//       });
-//     }
-//   };
-
   export const createOrder = async (req, res) => {
     console.log("order in backend is ",req.body);
     const order = new Order(req.body);

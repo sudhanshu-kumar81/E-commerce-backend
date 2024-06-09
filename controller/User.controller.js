@@ -41,3 +41,21 @@ export const updateUser = async (req, res) => {
     });
   }
 };
+//   const { id } = req.params;
+//   console.log("req.params is ",req.params);
+//   console.log("id is ",id);
+//   try {
+//     const user = await User.findById(id);
+//     res.status(200).json({
+//         success:true,
+//         message:"user fetched by Id",
+//         user:user.orders
+//     });
+//   } catch (err) {
+//     res.status(400).json({
+//         success:false,
+//         message:"failed to fatch user by id",
+//         error:err.message
+//     });
+//   }
+// };
