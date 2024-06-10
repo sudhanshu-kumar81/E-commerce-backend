@@ -1,10 +1,9 @@
 import Cart from "../model/Cart.model.js";
 export const fetchCartByUser = async (req, res) => {
-  const { user } = req.query;
-  console.log("fetchcartByUser id as user",user);
-  console.log("req.query",req.query);
+  const id = req.userId;
+  console.log("fetchcartByUser id as user",id);
   try {
-    const cartItems = await Cart.find({ user: user }).populate('product').populate('user');
+    const cartItems = await Cart.find({ user:id}).populate('product').populate('user');
      console.log("data from fetchcartBy user",cartItems)
     res.status(200).json({
         success:true,
@@ -26,7 +25,7 @@ export const addToCart = async (req, res) => {
   console.log("cart is in addTocart backend ",cart);
   try {
     const doc = await cart.save();
-    const result = await await (await doc.populate("product")).populate("user")
+    const result =  await (await doc.populate("product")).populate("user")
     res.status(201).json({
         success:true,
         message:'add to cart successfully',

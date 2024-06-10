@@ -6,7 +6,7 @@ import BrandRoutes from './routes/Brands.routes.js'
 import CartRoutes from './routes/Cart.routes.js'
 import UserRoutes from './routes/User.routes.js'
 import OrderRoutes from './routes/Order.routes.js'
-import AuthRoutes from './routes/Auth.routes.js'
+// import AuthRoutes from './routes/Auth.routes.js'
 import cors from 'cors'
 import categoryRoutes from './routes/Category.routes.js'
 dotenv.config({path:'./.env'})
@@ -20,7 +20,7 @@ app.use('/categories',categoryRoutes)
 app.use('/brands',BrandRoutes)
 app.use('/cart',CartRoutes)
 app.use('/users',UserRoutes)
-app.use('/auth',AuthRoutes)
+// app.use('/auth',AuthRoutes)
 app.use('/orders',OrderRoutes)
 
 

@@ -4,7 +4,7 @@ import {authenticate} from '../middleware/authenticate.js'
 
 const router = express.Router();
 router.post('/',authenticate, addToCart)
-      .get('/',authenticate, fetchCartByUser)
+      .get('/userCart',authenticate, fetchCartByUser)
       .delete('/:id',authenticate, deleteFromCart)
       .patch('/:id',authenticate, updateCart)
 

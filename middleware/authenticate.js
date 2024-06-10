@@ -23,7 +23,7 @@ const authenticate =async (req,res,next) => {
         console.log("id is ",id);
         // const checkUser=await User.findOne({_id:id})
         const rootUser=await User.findOne({_id:id,'tokens.token':token})
-        console.log("rootuser is",rootUser)
+        // console.log("rootuser is",rootUser)
         if(!rootUser){
           return res.status(401).json({
             success: false,
