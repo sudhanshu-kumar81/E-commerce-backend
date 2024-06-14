@@ -1,4 +1,6 @@
 import Order from "../model/Order.model.js";
+import mongoose from "mongoose";
+import Product from "../model/Product.model.js";
 export const fetchOrderOfUser=async(req,res)=>{
   console.log("arrived in fetchOrderOfUser ");
   try{
@@ -69,16 +71,35 @@ export const fetchAllOrders = async (req, res) => {
 };
   export const createOrder = async (req, res) => {
     console.log("order in backend is ",req.body);
+    const session = await mongoose.startSession();
+    session.startTransaction();
     const order = new Order(req.body);
-    
+    const productAllProductId = order.items.map(item => item.product.id);
+    console.log("productAllProductId is ",productAllProductId);
     try {
+      for (let item of order.items) {
+        const updatedProduct = await Product.findByIdAndUpdate(item.product.id, { $inc: { stock: -item.quantity } }, { new: true });
+        console.log("updated product is ", updatedProduct);
+      }
+      // for (let id of productAllProductId) {
+      //   // if (product.stock < 1) {
+      //   //   throw new Error(`Product with id ${id} is out of stock`);
+      //   // }
+      //   // const updatedProduct=await Product.findByIdAndUpdate(id, { $inc: { stock: -{} } }, { new: true });
+      //   // console.log("updated product is ",updatedProduct)
+      // }
+      console.log("all item decresed")
       const doc = await order.save();
+      await session.commitTransaction();
+      session.endSession();
       res.status(201).json({
         success:true,
         message:"order created successfully ",
         order:doc
       });
     } catch (err) {
+      await session.abortTransaction();
+      session.endSession();
       res.status(400).json({
         success:false,
         message:"error in creating order ",
