@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema({
   role: { type: String, required: true, default:'user' },
   addresses: { type: [mongoose.Schema.Types.Mixed] }, 
   name: { type: String },
+  passwordChangeToken:{
+    type:String,
+    default:''
+  },
   tokens: [{
     token: {
       type: String,

@@ -2,7 +2,9 @@
 import User from "../model/User.model.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
+import { v4 as uuidv4 } from 'uuid';
 import Category from '../model/Category.model.js';
+import { mailSender } from "../middleware/mailSender.js";
 export const createUser = async (req, res) => {
   console.log("create user backend");
   try {
@@ -117,3 +119,78 @@ export const updateUser = async (req, res) => {
     });
   }
 };
+
+
+
+export const resetPasswordRequestHandler=async(req,res)=>{
+  try{
+    console.log("arrived in backend");
+      const {email}=req.body;
+      console.log("email is ",email);
+      const user=await User.findOne({email})
+      if(!user){
+          return res.status(401).json({
+              success:false,
+              message:"you are not registered with Us"
+          })   
+      }
+      //user exist
+      const token=uuidv4();
+      const updatedUser=await User.findOneAndUpdate(
+        { email: email }, // Filter criteria
+        { $set: { passwordChangeToken:token } }, // Update object
+        { new: true } // Options (optional, but recommended)
+      )
+      console.log("updated user is ",updatedUser)
+      console.log("token for link in reseting password is",token);
+      const url=`http://localhost:5173/reset-password?token=${token}&email=${email}`
+      console.log("url is ",url);
+
+        await mailSender(email,"pasword reset link",`password reset link:${url}`)
+        return res.json({
+          success:true,
+          message:"Email sent successfully"
+        })
+  }
+  catch(e){
+      console.log("error in reset password catch block",e);
+      return res.status(401).json({
+          success:false,
+          message:"problem happened somwhere in reseting password"
+      })
+  }
+
+
+}
+const resetPassword=async(req,res)=>{
+  try{
+      const {password,confirmPassword,token,email}=req.body;
+      console.log({password,confirmPassword,token,email})
+      const user=await User.findOne({email:email,passwordChangeToken:token})
+      console.log("user with token and email",user);
+      if(!user){
+          return res.status(401).json({
+              success:false,
+              message:" ResetToken Expired"
+          })
+      }
+      const hashedPassword=await bcrypt.hash(password,10);
+      console.log("hashed password is ",hashedPassword)
+     const updatedUser= await User.findOneAndUpdate({passwordChangeToken:token},{$set:{password:hashedPassword,passwordChangeToken:''}},{new:true})
+     console.log("updated user after reseting is",updatedUser)
+     return res.status(200).json({
+      success:true,
+      message:"password reset completely",
+      user:user
+  })
+  }
+  catch(e){
+      console.log("error in reseting password",e)
+      return res.status(401).json({
+          success:false,
+          message:"error occured in reseting password"
+      })
+  }
+
+}
+export {resetPassword}
