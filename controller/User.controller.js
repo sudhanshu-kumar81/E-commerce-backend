@@ -143,7 +143,7 @@ export const resetPasswordRequestHandler=async(req,res)=>{
       )
       console.log("updated user is ",updatedUser)
       console.log("token for link in reseting password is",token);
-      const url=`https://e-commerce-backend-alpha-one.vercel.app/reset-password?token=${token}&email=${email}`
+      const url=`https://qk-ord.netlify.app/reset-password?token=${token}&email=${email}`
       console.log("url is ",url);
 
         await mailSender(email,"pasword reset link",`password reset link:${url}`)
