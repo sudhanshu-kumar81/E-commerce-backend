@@ -1,6 +1,6 @@
 import express from 'express'
 import { createProduct,fetchAllProducts,fetchProductById,updateProduct } from '../controller/Product.controller.js';
-import { authenticate } from '../middleware/Authenticate.js';
+import { authenticate } from '../middleware/authenticate.js';
 
 
 const router = express.Router();
