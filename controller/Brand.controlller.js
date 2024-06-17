@@ -19,10 +19,8 @@ export const fetchBrands = async (req, res) => {
 
 export const createBrand = async (req, res) => {
   const brand = new Brand(req.body);
-  console.log("req.body is ",req.body);
   try {
     const doc = await brand.save();
-    console.log("docs in create category is ",doc);
     res.status(201).json({
       success:true,
       message:"category added",

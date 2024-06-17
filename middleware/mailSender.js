@@ -15,11 +15,11 @@ const mailSender=async(email,title,body)=>{
             subject: `${title}`, 
             html:`${body}`, // html body
           });
-          console.log(info);
           return info;
      }
      catch(e){
         console.log("error in sending email",e);
+        
      }
 }
 export {mailSender}

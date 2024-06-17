@@ -2,12 +2,9 @@ import Order from "../model/Order.model.js";
 import mongoose from "mongoose";
 import Product from "../model/Product.model.js";
 export const fetchOrderOfUser=async(req,res)=>{
-  console.log("arrived in fetchOrderOfUser ");
   try{
     const {id}=req.params;
-    console.log("user id is ",id);
     const order=await Order.find({user:id});
-    console.log("order is ",order);
     res.status(200).json({
       success:true,
       message:"fetched order of user successfully",
@@ -25,7 +22,6 @@ export const fetchOrderOfUser=async(req,res)=>{
 
 
 export const fetchAllOrders = async (req, res) => {
-  console.log("req.query is ",req.query);
   let query = Order.find({});
   let totalOrdersQuery =Order.find({});
 
@@ -40,7 +36,6 @@ export const fetchAllOrders = async (req, res) => {
     totalOrdersQuery = totalProductsQuery.find({ brand: req.query.brand });
   }
   //TODO : How to get sort on discounted Price not on Actual price
-  console.log("req.query._sort",req.query._sort)
   if (req.query._sort && req.query._order) {
     query = query.sort({ [req.query._sort]: req.query._order });
   }
@@ -70,25 +65,14 @@ export const fetchAllOrders = async (req, res) => {
   }
 };
   export const createOrder = async (req, res) => {
-    console.log("order in backend is ",req.body);
     const session = await mongoose.startSession();
     session.startTransaction();
     const order = new Order(req.body);
     const productAllProductId = order.items.map(item => item.product.id);
-    console.log("productAllProductId is ",productAllProductId);
     try {
       for (let item of order.items) {
         const updatedProduct = await Product.findByIdAndUpdate(item.product.id, { $inc: { stock: -item.quantity } }, { new: true });
-        console.log("updated product is ", updatedProduct);
       }
-      // for (let id of productAllProductId) {
-      //   // if (product.stock < 1) {
-      //   //   throw new Error(`Product with id ${id} is out of stock`);
-      //   // }
-      //   // const updatedProduct=await Product.findByIdAndUpdate(id, { $inc: { stock: -{} } }, { new: true });
-      //   // console.log("updated product is ",updatedProduct)
-      // }
-      console.log("all item decresed")
       const doc = await order.save();
       await session.commitTransaction();
       session.endSession();

@@ -1,10 +1,7 @@
 import Product from '../model/Product.model.js'
 
 export const createProduct = async (req, res) => {
-  // this product we have to get from API body
-  console.log("req.body in create product is ",req.body);
   const product = new Product(req.body);
-  console.log("product before saving",product)
   try {
     const doc = await product.save();
     res.status(201).json({
@@ -26,7 +23,6 @@ export const fetchAllProducts = async (req, res) => {
   // sort = {_sort:"price",_order="desc"}
   // pagination = {_page:1,_limit=10}
   // TODO : we have to try with multiple category and brands after change in front-end
-  console.log("req.query is ",req.query);
   let query = Product.find({});
   let totalProductsQuery = Product.find({});
   // let query = Product.find({deleted:{$ne:true}});
@@ -43,17 +39,11 @@ export const fetchAllProducts = async (req, res) => {
     totalProductsQuery = totalProductsQuery.find({ brand: req.query.brand });
   }
   //TODO : How to get sort on discounted Price not on Actual price
-  console.log("req.query._sort",req.query._sort)
   if (req.query._sort && req.query._order) {
     query = query.sort({ [req.query._sort]: req.query._order });
   }
 
   const totalDocs = await totalProductsQuery.count().exec();
-  // console.log({ 
-  //   success:true,
-  //   totalDocs:totalDocs,
-
-  //  });
 
   if (req.query._page && req.query._per_page) {
     const pageSize = req.query._per_page;
@@ -81,11 +71,9 @@ export const fetchAllProducts = async (req, res) => {
 
 export const fetchProductById = async (req, res) => {
   const { id } = req.params;
-  console.log("id is in backend ",id);
 
   try {
     const product = await Product.findById(id);
-    console.log("product is ",product);
     res.status(200).json({
       success:true,
       product:product
@@ -100,7 +88,6 @@ export const fetchProductById = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
-  console.log("req.body",req.body);
   try {
     const product = await Product.findByIdAndUpdate(id, req.body, {new:true});
     res.status(200).json({
