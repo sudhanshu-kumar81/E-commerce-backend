@@ -125,7 +125,7 @@ export const resetPasswordRequestHandler=async(req,res)=>{
         { $set: { passwordChangeToken:token } }, // Update object
         { new: true } // Options (optional, but recommended)
       )
-      const url=`https://qk-ord.netlify.app/reset-password?token=${token}&email=${email}`
+      const url=`https://e-commerce-mu-swart.vercel.app/reset-password?token=${token}&email=${email}`
 
         await mailSender(email,"pasword reset link",`password reset link:${url}`)
         return res.json({
